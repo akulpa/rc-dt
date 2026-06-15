@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    image: ://microsoft.com
+    volumes:
+      - ..:/workspace:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: lockiee
+      MYSQL_DATABASE: 3dt_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: lockiee
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+volumes:
+  mysql-data:
